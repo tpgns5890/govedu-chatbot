@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=dev
+      - DATA_DIR=/app/data
+      - SQLITE_PATH=/app/data/structured/edu.db
+      - VECTOR_DIR=/app/data/vector
+      - LOG_DB_PATH=/app/data/logs/chatlog.db
+      - MODEL_PATH=/app/models/llama3-8b.gguf
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models

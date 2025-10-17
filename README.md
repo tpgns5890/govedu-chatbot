@@ -2,13 +2,12 @@
 
 로컬 Windows 환경에서 시작 → 이후 폐쇄망/클라우드로 이식 가능한 **온프레미스 친화형** 스타터 키트입니다.
 - 백엔드: FastAPI
-- AI 파이프라인: (자리표시자) LangChain 기반 RAG / Text2SQL
+- AI 파이프라인: LangChain 기반 RAG / Text2SQL
 - 데이터: SQLite(운영 샘플), ChromaDB(문서 검색) — 둘 다 로컬 폴더 안에 생성
 - 모델: llama.cpp (CPU), 이후 교체 가능 구조
 
 ## 1) 빠른 시작 (Windows, Python 3.13 기준)
 ```powershell
-cd ai-chatbot-onprem
 python -m venv .venv
 .\.venv\Scripts\activate
 pip install -U pip

@@ -4,7 +4,7 @@ pydantic==2.9.2
 python-dotenv==1.0.1
 langchain==0.2.16
 chromadb==0.5.5
-numpy==2.1.1
-pandas==2.2.3
+numpy<2.0.0,>=1.26.0
+pandas<2.3.0
 # 선택: llama-cpp-python는 Windows에서 휠 설치가 어려울 수 있어 추후 안내
 # llama-cpp-python==0.2.90

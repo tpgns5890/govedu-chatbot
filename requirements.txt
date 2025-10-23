@@ -1,10 +1,23 @@
+# --- Web / API ---
 fastapi==0.114.2
 uvicorn[standard]==0.30.6
-pydantic==2.9.2
 python-dotenv==1.0.1
+pydantic==2.9.2
+
+# --- LangChain 0.2.x 호환 세트 (핵심) ---
 langchain==0.2.16
+langchain-core==0.2.43
+langchain-community==0.2.11
+
+# --- Vector DB ---
 chromadb==0.5.5
-numpy<2.0.0,>=1.26.0
-pandas<2.3.0
-# 선택: llama-cpp-python는 Windows에서 휠 설치가 어려울 수 있어 추후 안내
-# llama-cpp-python==0.2.90
+
+# --- Embeddings stack (HuggingFace 기반 임베딩용) ---
+sentence-transformers==2.7.0
+transformers>=4.40.0,<5
+huggingface-hub>=0.24.0,<1
+torch>=2.2,<3
+
+# --- Data / Numeric ---
+numpy>=1.26,<2.0
+pandas>=2.0,<2.3

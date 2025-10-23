@@ -1,42 +1,43 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel
+from app.text2sql.router import smart_router
 
-from app.core.config import settings
+router = APIRouter()
 
-api_router = APIRouter()
-
+# 요청 스키마
 class ChatRequest(BaseModel):
-    query: str = Field(..., description="사용자 입력 질의")
-    mode: Optional[str] = Field(default="auto", description="auto|rag|sql")
+    query: str
+    k: int = 3  # (RAG 모드 시 문서 수)
 
-@api_router.get("/health", tags=["system"])
-def health():
-    return {
-        "status": "ok",
-        "env": settings.APP_ENV,
-        "sqlite": settings.SQLITE_PATH,
-        "vector_dir": settings.VECTOR_DIR
-    }
+@router.post("/chat")
+def chat_endpoint(request: ChatRequest):
+    """
+    하이브리드 AI 챗봇 엔드포인트
+    - Text2SQL: 수치/통계 질의
+    - RAG: 문서 검색/설명 질의
+    """
+    try:
+        print(f"[CHAT] 사용자 요청: {request.query}")
+        result = smart_router(request.query)
 
-@api_router.post("/chat", tags=["chat"])
-def chat(req: ChatRequest):
-    # 자리표시자: 간단한 분기. 추후 RAG/Text2SQL 연결
-    q = req.query.strip()
-    mode = (req.mode or "auto").lower()
+        if result["mode"] == "text2sql":
+            return {
+                "mode": "text2sql",
+                "sql": result["sql"],
+                "rows": result["rows"],
+                "data": result["result"],
+                "message": f"{result['rows']}개의 데이터 반환"
+            }
 
-    if not q:
-        raise HTTPException(status_code=400, detail="query is empty")
+        elif result["mode"] == "rag":
+            return {
+                "mode": "rag",
+                "answer": result["answer"],
+                "message": "문서 기반 답변 생성 완료"
+            }
 
-    # Simple heuristic for demo
-    if mode == "sql" or ("취업률" in q or "TOP" in q or "비율" in q):
-        route = "text2sql"
-    elif mode == "rag" or ("정책" in q or "차이점" in q or "설명" in q):
-        route = "rag"
-    else:
-        route = "auto"
+        else:
+            raise HTTPException(status_code=500, detail="알 수 없는 처리 모드")
 
-    return {
-        "route": route,
-        "answer": f"[DEMO] '{q}' 에 대한 임시 응답입니다. (추후 RAG/SQL 연결)",
-    }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

@@ -1,10 +1,27 @@
 from fastapi import FastAPI
-from app.api.router import api_router
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
-app = FastAPI(title="AI Chatbot On-Prem", version="0.1.0")
+# ✅ 하이브리드 라우터 임포트
+from app.api.router import router as chat_router
 
-app.include_router(api_router)
+app = FastAPI(
+    title="Govedu Hybrid AI Chatbot API",
+    description="RAG + Text2SQL 통합형 온프레미스 챗봇 서버",
+    version="2.0.0",
+)
 
-@app.get("/", tags=["root"])
-def root():
-    return {"ok": True, "service": "ai-chatbot-onprem", "docs": "/docs"}
+# ✅ CORS 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ✅ 라우터 등록 (이게 핵심!)
+app.include_router(chat_router)
+
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload=True)

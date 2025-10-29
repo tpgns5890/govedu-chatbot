@@ -21,3 +21,4 @@ torch>=2.2,<3
 # --- Data / Numeric ---
 numpy>=1.26,<2.0
 pandas>=2.0,<2.3
+python-multipart

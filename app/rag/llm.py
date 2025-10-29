@@ -1,5 +1,5 @@
 from functools import lru_cache
-from langchain.llms import Ollama
+from langchain_community.llms import Ollama
 
 @lru_cache(maxsize=1)
 def load_llm(model_name: str = "Meta-Llama-3-Ko-Instruct-8B", temperature: float = 0.2):
